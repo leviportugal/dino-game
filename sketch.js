@@ -9,6 +9,9 @@ var estado = "jogar"
 var gpnuvem
 var gpcacto
 var trexcollided
+var gameover, gameoverimage
+var restart, restartimage
+
 function preload(){
   trex_running = loadAnimation("trex1.png","trex3.png","trex4.png");
   groundImage = loadImage("ground2.png")
@@ -20,6 +23,8 @@ c4 = loadImage ("obstacle4.png")
 c5 = loadImage ("obstacle5.png")
 c6 = loadImage ("obstacle6.png")
 trexcollided = loadAnimation ("trex_collided.png")
+gameoverimage = loadImage ("gameOver.png")
+restartimage = loadImage ("restart.png")
 }
 
 function setup(){
@@ -39,6 +44,16 @@ chao2=createSprite (200,200,400,20)
 chao2.visible=false
 gpnuvem = new Group ()
 gpcacto = new Group ()
+trex.setCollider ("circle", 0,0,40)
+gameover = createSprite (300, 100,20,20 )
+restart = createSprite (300, 150, 20,20)
+gameover.addImage ("gameover", gameoverimage)
+restart.addImage ("restart", restartimage)
+gameover.scale = 0.5
+restart.scale = 0.8
+gameover.visible = false
+restart.visible = false 
+
 }
 
 
@@ -71,6 +86,18 @@ geracacto()
  gpcacto.setLifetimeEach (-10)
  gpnuvem.setLifetimeEach (-10) 
  trex.changeAnimation("collided",trexcollided)
+trex.velocityY = 0
+gameover.visible = true
+restart.visible = true
+if (mousePressedOver (restart)){
+estado="jogar"
+gpcacto.destroyEach()
+gpnuvem.destroyEach()
+restart.visible = false
+gameover.visible= false
+trex.changeAnimation("running", trex_running)
+score=0
+}
 }
  
   //definir a cor do plano de fundo 
@@ -98,7 +125,7 @@ if (frameCount%50===0){
   nuvem.y = Math.round(random(10,100))
 nuvem.lifetime=160
 gpnuvem.add(nuvem)
-
+trex.depth = nuvem.depth +1
 
 }
 }
