@@ -11,7 +11,10 @@ var gpcacto
 var trexcollided
 var gameover, gameoverimage
 var restart, restartimage
-
+var jumpsound
+var diesound
+var checksound
+var Vcacto = 5
 function preload(){
   trex_running = loadAnimation("trex1.png","trex3.png","trex4.png");
   groundImage = loadImage("ground2.png")
@@ -25,6 +28,9 @@ c6 = loadImage ("obstacle6.png")
 trexcollided = loadAnimation ("trex_collided.png")
 gameoverimage = loadImage ("gameOver.png")
 restartimage = loadImage ("restart.png")
+jumpsound = loadSound ("jump.mp3")
+diesound = loadSound ("die.mp3")
+checksound = loadSound ("checkPoint.mp3")
 }
 
 function setup(){
@@ -59,10 +65,10 @@ restart.visible = false
 
 function draw(){
  if (estado === "jogar") {
-  chao.velocityX= -2
+  chao.velocityX= -Vcacto
 if (trex.isTouching (gpcacto)){
 estado="final"
-
+diesound.play ()
 }
   if (chao.x<0) {
     chao.x = chao.width/2;
@@ -70,9 +76,16 @@ estado="final"
      
   score++
   
+if (score%200===0){
+checksound.play  ()
+Vcacto ++ 
+}
+
+
   //pular quando tecla de espaço for pressionada
   if(keyDown("space") && trex.y >= 160    ){
     trex.velocityY = -13; 
+  jumpsound.play ()
   }  
 trex.velocityY = trex.velocityY + 0.9;
 
@@ -135,8 +148,8 @@ if (frameCount%80===0){
 
   var cacto
   cacto=createSprite (600, 170, 20,40)
-  cacto.velocityX = -5
-  cacto.scale = 0.5
+  cacto.velocityX = -Vcacto 
+  cacto.scale = 0.4
   cacto.lifetime = 315
 var hand= Math.round (random(1,6))
 switch (hand){
